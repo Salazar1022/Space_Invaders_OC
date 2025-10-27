@@ -1,45 +1,81 @@
 /** Nave del jugador (16px ancho) */
 class Player {
     field int x; // posición X en píxeles
-    field int y;     // fila en px
-    field Array sprite; // 8 filas
+    field int y; // fila en px
+    field Array sprite; // 16 filas
 
     constructor Player new(int xStart, int yStart) {
-        var Array s; var int i;
+        var Array s;
         let x = xStart;
         let y = yStart;
-        let s = Array.new(8);
-        // sprite simple: bloque horizontal de 3 filas
+        let s = Array.new(16);
+        // Tu sprite de la nave
         let s[0] = 0;
-        let s[1] = -1;
-        let s[2] = -1;
-        let s[3] = -1;
-        let s[4] = 0;
-        let s[5] = 0;
-        let s[6] = 0;
-        let s[7] = 0;
+        let s[1] = 0;
+        let s[2] = 0;
+        let s[3] = 0;
+        let s[4] = 64;
+        let s[5] = 224;
+        let s[6] = 432;
+        let s[7] = 272;
+        let s[8] = 336;
+        let s[9] = 496;
+        let s[10] = 1016;
+        let s[11] = 1016;
+        let s[12] = 856;
+        let s[13] = 584;
+        let s[14] = 0;
+        let s[15] = 0;
         let sprite = s;
         return this;
     }
 
     method void draw() {
+        var int row; var int bits; var int bit; var int px;
+        var int drawX; var int drawY;
+        var int x2; var int y2;
+        
+        let x2 = x + 31;
+        let y2 = y + 31;
+        
+        // Validaciones permisivas
         if (x < 0) { return; }
         if (y < 0) { return; }
-        if (x > 495) { return; }
-        if (y > 247) { return; }
+        if (x2 > 511) { return; }
+        if (y2 > 255) { return; }
+        
+        // Dibujar sprite pixel por pixel, ESCALADO 2x como los aliens
         do Screen.setColor(true);
-        do Screen.drawRectangle(x, y, x + 15, y + 7);
+        let row = 0;
+        while (row < 16) {
+            let bits = sprite[row];
+            let bit = 0;
+            while (bit < 16) {
+                let px = bits & 1;
+                if (px = 1) {
+                    // Dibujar pixel 2x2 para hacer la nave más grande
+                    let drawX = x + ((15 - bit) * 2);
+                    let drawY = y + (row * 2);
+                    do Screen.drawPixel(drawX, drawY);
+                    do Screen.drawPixel(drawX + 1, drawY);
+                    do Screen.drawPixel(drawX, drawY + 1);
+                    do Screen.drawPixel(drawX + 1, drawY + 1);
+                }
+                let bits = bits / 2;
+                let bit = bit + 1;
+            }
+            let row = row + 1;
+        }
         return;
     }
 
     method void clear() {
         if (x < 0) { return; }
         if (y < 0) { return; }
-        if (x > 495) { return; }
-        if (y > 247) { return; }
+        if ((x + 31) > 511) { return; }  // Ahora 32x32
+        if ((y + 31) > 255) { return; }
         do Screen.setColor(false);
-        do Screen.drawRectangle(x, y, x + 15, y + 7);
-        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + 31, y + 31);
         return;
     }
 
@@ -47,7 +83,7 @@ class Player {
         do clear();
         let x = x + dx;
         if (x < 0) { let x = 0; }
-        if (x > 495) { let x = 495; }
+        if (x > 479) { let x = 479; }  // 511 - 32 = 479 para nave de 32px
         do draw();
         return;
     }

@@ -1,4 +1,4 @@
-function Player.new 2
+function Player.new 1
 push constant 3
 call Memory.alloc 1
 pop pointer 0
@@ -6,7 +6,7 @@ push argument 0
 pop this 0
 push argument 1
 pop this 1
-push constant 8
+push constant 16
 call Array.new 1
 pop local 0
 push constant 0
@@ -20,8 +20,7 @@ pop that 0
 push constant 1
 push local 0
 add
-push constant 1
-neg
+push constant 0
 pop temp 0
 pop pointer 1
 push temp 0
@@ -29,8 +28,7 @@ pop that 0
 push constant 2
 push local 0
 add
-push constant 1
-neg
+push constant 0
 pop temp 0
 pop pointer 1
 push temp 0
@@ -38,8 +36,7 @@ pop that 0
 push constant 3
 push local 0
 add
-push constant 1
-neg
+push constant 0
 pop temp 0
 pop pointer 1
 push temp 0
@@ -47,7 +44,7 @@ pop that 0
 push constant 4
 push local 0
 add
-push constant 0
+push constant 64
 pop temp 0
 pop pointer 1
 push temp 0
@@ -55,7 +52,7 @@ pop that 0
 push constant 5
 push local 0
 add
-push constant 0
+push constant 224
 pop temp 0
 pop pointer 1
 push temp 0
@@ -63,12 +60,76 @@ pop that 0
 push constant 6
 push local 0
 add
-push constant 0
+push constant 432
 pop temp 0
 pop pointer 1
 push temp 0
 pop that 0
 push constant 7
+push local 0
+add
+push constant 272
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 8
+push local 0
+add
+push constant 336
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 9
+push local 0
+add
+push constant 496
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 10
+push local 0
+add
+push constant 1016
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 11
+push local 0
+add
+push constant 1016
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 12
+push local 0
+add
+push constant 856
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 13
+push local 0
+add
+push constant 584
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 14
+push local 0
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 15
 push local 0
 add
 push constant 0
@@ -80,9 +141,17 @@ push local 0
 pop this 2
 push pointer 0
 return
-function Player.draw 0
+function Player.draw 8
 push argument 0
 pop pointer 0
+push this 0
+push constant 31
+add
+pop local 6
+push this 1
+push constant 31
+add
+pop local 7
 push this 0
 push constant 0
 lt
@@ -101,8 +170,8 @@ label IF_TRUE1
 push constant 0
 return
 label IF_FALSE1
-push this 0
-push constant 495
+push local 6
+push constant 511
 gt
 if-goto IF_TRUE2
 goto IF_FALSE2
@@ -110,8 +179,8 @@ label IF_TRUE2
 push constant 0
 return
 label IF_FALSE2
-push this 1
-push constant 247
+push local 7
+push constant 255
 gt
 if-goto IF_TRUE3
 goto IF_FALSE3
@@ -123,16 +192,93 @@ push constant 0
 not
 call Screen.setColor 1
 pop temp 0
-push this 0
-push this 1
+push constant 0
+pop local 0
+label WHILE_EXP0
+push local 0
+push constant 16
+lt
+not
+if-goto WHILE_END0
+push local 0
+push this 2
+add
+pop pointer 1
+push that 0
+pop local 1
+push constant 0
+pop local 2
+label WHILE_EXP1
+push local 2
+push constant 16
+lt
+not
+if-goto WHILE_END1
+push local 1
+push constant 1
+and
+pop local 3
+push local 3
+push constant 1
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
 push this 0
 push constant 15
+push local 2
+sub
+push constant 2
+call Math.multiply 2
 add
+pop local 4
 push this 1
-push constant 7
+push local 0
+push constant 2
+call Math.multiply 2
 add
-call Screen.drawRectangle 4
+pop local 5
+push local 4
+push local 5
+call Screen.drawPixel 2
 pop temp 0
+push local 4
+push constant 1
+add
+push local 5
+call Screen.drawPixel 2
+pop temp 0
+push local 4
+push local 5
+push constant 1
+add
+call Screen.drawPixel 2
+pop temp 0
+push local 4
+push constant 1
+add
+push local 5
+push constant 1
+add
+call Screen.drawPixel 2
+pop temp 0
+label IF_FALSE4
+push local 1
+push constant 2
+call Math.divide 2
+pop local 1
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP1
+label WHILE_END1
+push local 0
+push constant 1
+add
+pop local 0
+goto WHILE_EXP0
+label WHILE_END0
 push constant 0
 return
 function Player.clear 0
@@ -157,7 +303,9 @@ push constant 0
 return
 label IF_FALSE1
 push this 0
-push constant 495
+push constant 31
+add
+push constant 511
 gt
 if-goto IF_TRUE2
 goto IF_FALSE2
@@ -166,7 +314,9 @@ push constant 0
 return
 label IF_FALSE2
 push this 1
-push constant 247
+push constant 31
+add
+push constant 255
 gt
 if-goto IF_TRUE3
 goto IF_FALSE3
@@ -180,16 +330,12 @@ pop temp 0
 push this 0
 push this 1
 push this 0
-push constant 15
+push constant 31
 add
 push this 1
-push constant 7
+push constant 31
 add
 call Screen.drawRectangle 4
-pop temp 0
-push constant 0
-not
-call Screen.setColor 1
 pop temp 0
 push constant 0
 return
@@ -213,12 +359,12 @@ push constant 0
 pop this 0
 label IF_FALSE0
 push this 0
-push constant 495
+push constant 479
 gt
 if-goto IF_TRUE1
 goto IF_FALSE1
 label IF_TRUE1
-push constant 495
+push constant 479
 pop this 0
 label IF_FALSE1
 push pointer 0
