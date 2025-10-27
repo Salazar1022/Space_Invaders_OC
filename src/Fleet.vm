@@ -1,4 +1,4 @@
-function Fleet.new 6
+function Fleet.new 9
 push constant 5
 call Memory.alloc 1
 pop pointer 0
@@ -13,6 +13,10 @@ push constant 16
 pop this 3
 push constant 120
 pop this 4
+call Sprites.makeAlienC 0
+pop local 6
+call Sprites.makeAlienD 0
+pop local 7
 push constant 0
 pop local 2
 push constant 0
@@ -23,6 +27,33 @@ push constant 3
 lt
 not
 if-goto WHILE_END0
+push local 0
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push argument 6
+pop local 8
+label IF_FALSE0
+push local 0
+push constant 1
+eq
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 6
+pop local 8
+label IF_FALSE1
+push local 0
+push constant 2
+eq
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 7
+pop local 8
+label IF_FALSE2
 push constant 0
 pop local 1
 label WHILE_EXP1
@@ -33,19 +64,19 @@ not
 if-goto WHILE_END1
 push argument 2
 push local 1
-push constant 32
+push constant 40
 call Math.multiply 2
 add
 pop local 4
 push argument 3
 push local 0
-push constant 36
+push constant 40
 call Math.multiply 2
 add
 pop local 5
 push local 4
 push local 5
-push argument 6
+push local 8
 call Alien16.new 3
 pop local 3
 push local 2
@@ -120,7 +151,7 @@ pop local 0
 goto WHILE_EXP0
 label WHILE_END0
 push local 2
-push constant 503
+push constant 475
 gt
 if-goto IF_TRUE2
 goto IF_FALSE2

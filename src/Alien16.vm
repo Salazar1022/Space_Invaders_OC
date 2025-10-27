@@ -13,15 +13,15 @@ not
 pop this 3
 push pointer 0
 return
-function Alien16.draw 2
+function Alien16.draw 8
 push argument 0
 pop pointer 0
 push this 0
-push constant 15
+push constant 31
 add
 pop local 0
 push this 1
-push constant 15
+push constant 31
 add
 pop local 1
 push this 0
@@ -64,12 +64,93 @@ push constant 0
 not
 call Screen.setColor 1
 pop temp 0
+push constant 0
+pop local 2
+label WHILE_EXP0
+push local 2
+push constant 16
+lt
+not
+if-goto WHILE_END0
+push local 2
+push this 2
+add
+pop pointer 1
+push that 0
+pop local 3
+push constant 0
+pop local 4
+label WHILE_EXP1
+push local 4
+push constant 16
+lt
+not
+if-goto WHILE_END1
+push local 3
+push constant 1
+and
+pop local 5
+push local 5
+push constant 1
+eq
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
 push this 0
+push constant 15
+push local 4
+sub
+push constant 2
+call Math.multiply 2
+add
+pop local 6
 push this 1
-push local 0
-push local 1
-call Screen.drawRectangle 4
+push local 2
+push constant 2
+call Math.multiply 2
+add
+pop local 7
+push local 6
+push local 7
+call Screen.drawPixel 2
 pop temp 0
+push local 6
+push constant 1
+add
+push local 7
+call Screen.drawPixel 2
+pop temp 0
+push local 6
+push local 7
+push constant 1
+add
+call Screen.drawPixel 2
+pop temp 0
+push local 6
+push constant 1
+add
+push local 7
+push constant 1
+add
+call Screen.drawPixel 2
+pop temp 0
+label IF_FALSE4
+push local 3
+push constant 2
+call Math.divide 2
+pop local 3
+push local 4
+push constant 1
+add
+pop local 4
+goto WHILE_EXP1
+label WHILE_END1
+push local 2
+push constant 1
+add
+pop local 2
+goto WHILE_EXP0
+label WHILE_END0
 push constant 0
 return
 function Alien16.clear 2
@@ -84,11 +165,11 @@ push constant 0
 return
 label IF_FALSE0
 push this 0
-push constant 15
+push constant 31
 add
 pop local 0
 push this 1
-push constant 15
+push constant 31
 add
 pop local 1
 push this 0
@@ -177,7 +258,7 @@ function Alien16.rightX 0
 push argument 0
 pop pointer 0
 push this 0
-push constant 15
+push constant 31
 add
 return
 function Alien16.topY 0
@@ -189,7 +270,7 @@ function Alien16.bottomY 0
 push argument 0
 pop pointer 0
 push this 1
-push constant 15
+push constant 31
 add
 return
 function Alien16.kill 0

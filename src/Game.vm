@@ -22,28 +22,6 @@ pop local 3
 push local 3
 call Player.draw 1
 pop temp 0
-push constant 0
-not
-call Screen.setColor 1
-pop temp 0
-push constant 40
-push constant 40
-push constant 55
-push constant 55
-call Screen.drawRectangle 4
-pop temp 0
-push constant 72
-push constant 40
-push constant 87
-push constant 55
-call Screen.drawRectangle 4
-pop temp 0
-push constant 40
-push constant 76
-push constant 55
-push constant 91
-call Screen.drawRectangle 4
-pop temp 0
 push local 2
 call Fleet.redraw 1
 pop temp 0
@@ -155,7 +133,7 @@ push constant 1
 add
 pop local 6
 push local 6
-push constant 100
+push constant 150
 gt
 if-goto IF_TRUE7
 goto IF_FALSE7
@@ -166,20 +144,6 @@ pop temp 0
 push constant 0
 pop local 6
 label IF_FALSE7
-push constant 0
-pop local 7
-label WHILE_EXP1
-push local 7
-push constant 200
-lt
-not
-if-goto WHILE_END1
-push local 7
-push constant 1
-add
-pop local 7
-goto WHILE_EXP1
-label WHILE_END1
 goto WHILE_EXP0
 label WHILE_END0
 push constant 0

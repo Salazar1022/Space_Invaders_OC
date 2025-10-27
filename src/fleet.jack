@@ -15,24 +15,35 @@ class Fleet {
     ) {
         var int r; var int c; var int idx; var Alien16 a;
         var int posX; var int posY;
+        var Array sprite3; var Array sprite4;
+        var Array currentSprite;
         
         let aliens = Array.new(24);  // Hardcode 24
         let count = 24;
         let dir = 1;
         let stepY = 16;
         let delayMs = 120;
+        
+        // Obtener los otros 2 sprites
+        let sprite3 = Sprites.makeAlienC();
+        let sprite4 = Sprites.makeAlienD();
 
         let idx = 0;
         let r = 0;
         while (r < 3) {  // 3 filas
+            // Seleccionar sprite según la fila
+            if (r = 0) { let currentSprite = sprite1; }  // Fila 0: Alien A (pequeño)
+            if (r = 1) { let currentSprite = sprite3; }  // Fila 1: Alien C (mediano)
+            if (r = 2) { let currentSprite = sprite4; }  // Fila 2: Alien D (grande)
+            
             let c = 0;
             while (c < 8) {  // 8 columnas
-                // Calcular posición
-                let posX = startX + (c * 32);  // 16px alien + 16px gap
-                let posY = startY + (r * 36);  // 16px alien + 20px gap
+                // Calcular posición - ahora con aliens de 32x32
+                let posX = startX + (c * 40);  // 32px alien + 8px gap
+                let posY = startY + (r * 40);  // 32px alien + 8px gap
                 
-                // Crear alien
-                let a = Alien16.new(posX, posY, sprite1);
+                // Crear alien con el sprite de su fila
+                let a = Alien16.new(posX, posY, currentSprite);
                 let aliens[idx] = a;
                 do a.draw();
                 
@@ -58,7 +69,7 @@ class Fleet {
         }
         // Alien está en rightX, necesita 8 píxeles más para moverse
         // rightX puede ser máximo 503 (511 - 8) antes de moverse
-        if (maxX > 503) { return true; }
+        if (maxX > 475) { return true; }  // Ajustado para aliens de 32px
         return false;
     }
 

@@ -16,9 +16,11 @@ class Alien16 {
 
     method void draw() {
         var int x2; var int y2;
+        var int row; var int bits; var int bit; var int px;
+        var int drawX; var int drawY;
         
-        let x2 = x + 15;
-        let y2 = y + 15;
+        let x2 = x + 31;  // Ahora son 32x32
+        let y2 = y + 31;
         
         // Solo dibujar si está completamente dentro de la pantalla
         if (x < 0) { return; }
@@ -26,8 +28,29 @@ class Alien16 {
         if (x2 > 511) { return; }
         if (y2 > 255) { return; }
         
+        // Dibujar sprite pixel por pixel, ESCALADO 2x
         do Screen.setColor(true);
-        do Screen.drawRectangle(x, y, x2, y2);
+        let row = 0;
+        while (row < 16) {
+            let bits = sprite[row];
+            let bit = 0;
+            while (bit < 16) {
+                // Verificar si el bit está activado
+                let px = bits & 1;
+                if (px = 1) {
+                    // Dibujar pixel 2x2 para hacer el alien más grande
+                    let drawX = x + ((15 - bit) * 2);
+                    let drawY = y + (row * 2);
+                    do Screen.drawPixel(drawX, drawY);
+                    do Screen.drawPixel(drawX + 1, drawY);
+                    do Screen.drawPixel(drawX, drawY + 1);
+                    do Screen.drawPixel(drawX + 1, drawY + 1);
+                }
+                let bits = bits / 2;  // Shift right
+                let bit = bit + 1;
+            }
+            let row = row + 1;
+        }
         return;
     }
 
@@ -35,8 +58,8 @@ class Alien16 {
         var int x2; var int y2;
         if (~alive) { return; }
         
-        let x2 = x + 15;
-        let y2 = y + 15;
+        let x2 = x + 31;  // Ahora son 32x32
+        let y2 = y + 31;
         
         // Solo borrar si está completamente dentro de la pantalla
         if (x < 0) { return; }
@@ -65,9 +88,9 @@ class Alien16 {
     }
 
     method int leftX()  { return x; }
-    method int rightX() { return x + 15; }
+    method int rightX() { return x + 31; }  // Ahora son 32x32
     method int topY()      { return y; }
-    method int bottomY()   { return y + 15; }
+    method int bottomY()   { return y + 31; }  // Ahora son 32x32
 
     method void kill() {
         do clear();

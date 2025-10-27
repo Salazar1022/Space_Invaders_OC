@@ -20,12 +20,6 @@ class Game {
         let p = Player.new(250, 230);
         do p.draw();
         
-        // Dibujar cuadrados de prueba que SABEMOS que funcionan
-        do Screen.setColor(true);
-        do Screen.drawRectangle(40, 40, 55, 55);
-        do Screen.drawRectangle(72, 40, 87, 55);
-        do Screen.drawRectangle(40, 76, 55, 91);
-        
         // Forzar redibujo de todos los aliens DESPUÉS de los cuadrados de prueba
         do f.redraw();
 
@@ -65,16 +59,12 @@ class Game {
 
             // temporizador simple: cada N ticks la flota da un paso
             let tick = tick + 1;
-            if (tick > 100) {
+            if (tick > 150) {
                 do f.step();
                 let tick = 0;
             }
 
-            // pequeña espera ocupada para dar tiempo entre iteraciones
-            let t = 0;
-            while (t < 200) {
-                let t = t + 1;
-            }
+            // Sin delay para que el jugador responda instantáneamente
         }
 
         return;
