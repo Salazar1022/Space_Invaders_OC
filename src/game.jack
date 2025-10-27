@@ -31,8 +31,8 @@ class Game {
             // leer teclado usando la clase Keyboard del OS
             let key = Keyboard.keyPressed();
             // controles: 'a' = 65 izquierda, 'd' = 68 derecha, space = 32 dispara
-            if (key = 65) { do p.moveX(-6); }  // Movimiento más grande para fluidez
-            if (key = 68) { do p.moveX(6); }
+            if (key = 65) { do p.moveX(-5); }  // Movimiento rápido y fluido
+            if (key = 68) { do p.moveX(5); }
             if (key = 32) {
                 if (hasB = 0) {
                     let b = Bullet.new(p.leftX(), p.topY() - 1);
