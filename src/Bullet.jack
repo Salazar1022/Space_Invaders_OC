@@ -1,0 +1,52 @@
+/** Bala vertical 1-word (16px de ancho) que viaja hacia arriba */
+class Bullet {
+    field int xWord;
+    field int y;
+    field boolean alive;
+
+    constructor Bullet new(int xw, int yStart) {
+        let xWord = xw;
+        let y = yStart;
+        let alive = true;
+        do this.draw();
+        return this;
+    }
+
+    method void draw() {
+        if (~alive) { return; }
+        var int base;
+        let base = 16384 + (y * 32) + xWord;
+        do Memory.poke(base, -1); // dibuja una fila sólida en esa palabra
+        return;
+    }
+
+    method void clear() {
+        if (~alive) { return; }
+        var int base;
+        let base = 16384 + (y * 32) + xWord;
+        do Memory.poke(base, 0);
+        return;
+    }
+
+    method void step() {
+        if (~alive) { return; }
+        do this.clear();
+        let y = y - 1;
+        if (y < 0) {
+            let alive = false;
+            return;
+        }
+        do this.draw();
+        return;
+    }
+
+    method void kill() {
+        do this.clear();
+        let alive = false;
+        return;
+    }
+
+    method int leftWord() { return xWord; }
+    method int topY() { return y; }
+    method boolean isAlive() { return alive; }
+}

@@ -1,0 +1,96 @@
+// Guarda aquí tus máscaras como constantes (16 filas)
+// OJO: Jack no tiene const; las creamos en memoria al init y devolvemos Array.
+
+class Sprites {
+    /** Crea un Array[16] y lo llena con las filas del alien tipo A */
+    function Array makeAlienA() {
+        var Array a; 
+        let a = Array.new(16);
+        // Tus 16 Memory.poke equivalen a estos 16 valores:
+        // (copia exactamente tus números en el orden de arriba hacia abajo)
+        let a[0]  = 0;
+        let a[1]  = 0;
+        let a[2]  = 0;
+        let a[3]  = 0;
+        let a[4]  = 0;
+        let a[5]  = 1040;
+        let a[6]  = 544;
+        let a[7]  = 2032;
+        let a[8]  = 3544;
+        let a[9]  = 8188;
+        let a[10] = 6132;
+        let a[11] = 5140;
+        let a[12] = 864;
+        let a[13] = 0;
+        let a[14] = 0;
+        let a[15] = 0;
+        return a;
+    }
+
+    function Array makeAlienB() {
+        var Array a; 
+        let a = Array.new(16);
+        let a[0]  = 0;
+        let a[1]  = 0;
+        let a[2]  = 0;
+        let a[3]  = 0;
+        let a[4]  = 0;
+        let a[5]  = 2016;
+        let a[6]  = 8184;
+        let a[7]  = 16380;
+        let a[8]  = 28086;
+        let a[9]  = -1;      // 0xFFFF → fila sólida
+        let a[10] = 14748;
+        let a[11] = 4104;
+        let a[12] = 0;
+        let a[13] = 0;
+        let a[14] = 0;
+        let a[15] = 0;
+        return a;
+    }
+
+    function Array makeAlienC() {
+        var Array a; 
+        let a = Array.new(16);
+        let a[0]  = 0;
+        let a[1]  = 0;
+        let a[2]  = 0;
+        let a[3]  = 0;
+        let a[4]  = 0;
+        let a[5]  = 960;
+        let a[6]  = 8184;
+        let a[7]  = 16380;
+        let a[8]  = 14748;
+        let a[9]  = 16380;
+        let a[10] = 3696;
+        let a[11] = 6552;
+        let a[12] = 3120;
+        let a[13] = 0;
+        let a[14] = 0;
+        let a[15] = 0;
+        return a;
+    }
+
+    /** Otro mini alien para variedad */
+    function Array makeAlienD() {
+        var Array a; 
+        let a = Array.new(16);
+        let a[0]  = 0;
+        let a[1]  = 0;
+        let a[2]  = 0;
+        let a[3]  = 0;
+        let a[4]  = 0;
+        let a[5]  = 192;
+        let a[6]  = 480;
+        let a[7]  = 1008;
+        let a[8]  = 1752;
+        let a[9]  = 2040;
+        let a[10] = 288;
+        let a[11] = 720;
+        let a[12] = 1320;
+        let a[13] = 0;
+        let a[14] = 0;
+        let a[15] = 0;
+        return a;
+    }
+}

@@ -1,0 +1,66 @@
+/** Nave del jugador (ancha 1 word, p.ej. 16px) */
+class Player {
+    field int xWord; // columna en words
+    field int y;     // fila en px
+    field Array sprite; // 8 filas
+
+    constructor Player new(int xw, int yStart) {
+        var Array s; var int i;
+        let xWord = xw;
+        let y = yStart;
+        let s = Array.new(8);
+        // sprite simple: bloque horizontal de 3 filas
+        let s[0] = 0;
+        let s[1] = -1;
+        let s[2] = -1;
+        let s[3] = -1;
+        let s[4] = 0;
+        let s[5] = 0;
+        let s[6] = 0;
+        let s[7] = 0;
+        let sprite = s;
+        return this;
+    }
+
+    method void draw() {
+        if (~true) { /* no-op placeholder para estilo consistente */ }
+        var int base; var int i;
+        let base = 16384 + (y * 32) + xWord;
+        let i = 0;
+        while (i < 8) {
+            do Memory.poke(base + i * 32, sprite[i]);
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void clear() {
+        var int base; var int i;
+        let base = 16384 + (y * 32) + xWord;
+        let i = 0;
+        while (i < 8) {
+            do Memory.poke(base + i * 32, 0);
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void moveX(int dx) {
+        do this.clear();
+        let xWord = xWord + dx;
+        if (xWord < 0) { let xWord = 0; }
+        if (xWord > 31) { let xWord = 31; }
+        do this.draw();
+        return;
+    }
+
+    method int leftWord() { return xWord; }
+    method int topY() { return y; }
+
+    /** Dispara una bala desde justo encima de la nave */
+    method Bullet shoot() {
+        var Bullet bl;
+        let bl = Bullet.new(xWord, y - 1);
+        return bl;
+    }
+}

@@ -1,0 +1,68 @@
+/** Alien de 16x16 alineado a word */
+class Alien16 {
+    field int xWord;   // columna en words (0..31)
+    field int y;       // fila en píxeles (0..255)
+    field Array sprite; // 16 ints, cada uno 16 bits de la fila
+    field boolean alive;
+
+    /** Constructor: (xWord inicial, y inicial, puntero a sprite[16]) */
+    constructor Alien16 new(int xw, int yStart, Array spr) {
+        let xWord = xw;
+        let y = yStart;
+        let sprite = spr;
+        let alive = true;
+        return this;
+    }
+
+    method void draw() {
+        if (~alive) { return; }
+        var int base; var int i;
+        let base = 16384 + (y * 32) + xWord;
+        let i = 0;
+        while (i < 16) {
+            do Memory.poke(base + i * 32, sprite[i]);
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void clear() {
+        if (~alive) { return; }
+        var int base; var int i;
+        let base = 16384 + (y * 32) + xWord;
+        let i = 0;
+        while (i < 16) {
+            do Memory.poke(base + i * 32, 0);
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void moveX(int dxWords) {
+        // Borro, muevo, dibujo
+        do this.clear();
+        let xWord = xWord + dxWords;
+        do this.draw();
+        return;
+    }
+
+    method void moveDown(int dy) {
+        do this.clear();
+        let y = y + dy;
+        do this.draw();
+        return;
+    }
+
+    method int leftWord()  { return xWord; }
+    method int rightWord() { return xWord; } // ocupa 1 word de ancho (16 px)
+    method int topY()      { return y; }
+    method int bottomY()   { return y + 15; }
+
+    method void kill() {
+        do this.clear();
+        let alive = false;
+        return;
+    }
+
+    method boolean isAlive() { return alive; }
+}
