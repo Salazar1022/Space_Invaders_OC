@@ -1,13 +1,13 @@
-/** Alien de 16x16 alineado a word */
+/** Alien de 16x16 en coordenadas de píxeles */
 class Alien16 {
-    field int xWord;   // columna en words (0..31)
-    field int y;       // fila en píxeles (0..255)
+    field int x;       // posición X en píxeles (0..511)
+    field int y;       // posición Y en píxeles (0..255)
     field Array sprite; // 16 ints, cada uno 16 bits de la fila
     field boolean alive;
 
-    /** Constructor: (xWord inicial, y inicial, puntero a sprite[16]) */
-    constructor Alien16 new(int xw, int yStart, Array spr) {
-        let xWord = xw;
+    /** Constructor: (x en píxeles, y en píxeles, puntero a sprite[16]) */
+    constructor Alien16 new(int xPos, int yStart, Array spr) {
+        let x = xPos;
         let y = yStart;
         let sprite = spr;
         let alive = true;
@@ -15,51 +15,62 @@ class Alien16 {
     }
 
     method void draw() {
-        if (~alive) { return; }
-        var int base; var int i;
-        let base = 16384 + (y * 32) + xWord;
-        let i = 0;
-        while (i < 16) {
-            do Memory.poke(base + i * 32, sprite[i]);
-            let i = i + 1;
-        }
+        var int x2; var int y2;
+        
+        let x2 = x + 15;
+        let y2 = y + 15;
+        
+        // Solo dibujar si está completamente dentro de la pantalla
+        if (x < 0) { return; }
+        if (y < 0) { return; }
+        if (x2 > 511) { return; }
+        if (y2 > 255) { return; }
+        
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x2, y2);
         return;
     }
 
     method void clear() {
+        var int x2; var int y2;
         if (~alive) { return; }
-        var int base; var int i;
-        let base = 16384 + (y * 32) + xWord;
-        let i = 0;
-        while (i < 16) {
-            do Memory.poke(base + i * 32, 0);
-            let i = i + 1;
-        }
+        
+        let x2 = x + 15;
+        let y2 = y + 15;
+        
+        // Solo borrar si está completamente dentro de la pantalla
+        if (x < 0) { return; }
+        if (y < 0) { return; }
+        if (x2 > 511) { return; }
+        if (y2 > 255) { return; }
+        
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x2, y2);
         return;
     }
 
-    method void moveX(int dxWords) {
+    method void moveX(int dx) {
         // Borro, muevo, dibujo
-        do this.clear();
-        let xWord = xWord + dxWords;
-        do this.draw();
+        do clear();
+        let x = x + dx;
+        do draw();
         return;
     }
 
     method void moveDown(int dy) {
-        do this.clear();
+        do clear();
         let y = y + dy;
-        do this.draw();
+        do draw();
         return;
     }
 
-    method int leftWord()  { return xWord; }
-    method int rightWord() { return xWord; } // ocupa 1 word de ancho (16 px)
+    method int leftX()  { return x; }
+    method int rightX() { return x + 15; }
     method int topY()      { return y; }
     method int bottomY()   { return y + 15; }
 
     method void kill() {
-        do this.clear();
+        do clear();
         let alive = false;
         return;
     }

@@ -1,0 +1,208 @@
+function Bullet.new 0
+push constant 3
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push constant 0
+not
+pop this 2
+push pointer 0
+call Bullet.draw 1
+pop temp 0
+push pointer 0
+return
+function Bullet.draw 0
+push argument 0
+pop pointer 0
+push this 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push this 0
+push constant 0
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+return
+label IF_FALSE1
+push this 1
+push constant 0
+lt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 0
+return
+label IF_FALSE2
+push this 0
+push constant 510
+gt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 0
+return
+label IF_FALSE3
+push this 1
+push constant 255
+gt
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 0
+return
+label IF_FALSE4
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push constant 7
+add
+push this 1
+push this 0
+push constant 8
+add
+push this 1
+push constant 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Bullet.clear 0
+push argument 0
+pop pointer 0
+push this 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push this 0
+push constant 0
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+return
+label IF_FALSE1
+push this 1
+push constant 0
+lt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 0
+return
+label IF_FALSE2
+push this 0
+push constant 510
+gt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 0
+return
+label IF_FALSE3
+push this 1
+push constant 255
+gt
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 0
+return
+label IF_FALSE4
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push constant 7
+add
+push this 1
+push this 0
+push constant 8
+add
+push this 1
+push constant 3
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push constant 0
+return
+function Bullet.step 0
+push argument 0
+pop pointer 0
+push this 2
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push pointer 0
+call Bullet.clear 1
+pop temp 0
+push this 1
+push constant 1
+sub
+pop this 1
+push this 1
+push constant 0
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+pop this 2
+push constant 0
+return
+label IF_FALSE1
+push pointer 0
+call Bullet.draw 1
+pop temp 0
+push constant 0
+return
+function Bullet.kill 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Bullet.clear 1
+pop temp 0
+push constant 0
+pop this 2
+push constant 0
+return
+function Bullet.leftX 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Bullet.topY 0
+push argument 0
+pop pointer 0
+push this 1
+return
+function Bullet.isAlive 0
+push argument 0
+pop pointer 0
+push this 2
+return

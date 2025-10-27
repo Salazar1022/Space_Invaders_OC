@@ -1,52 +1,59 @@
-/** Bala vertical 1-word (16px de ancho) que viaja hacia arriba */
+/** Bala vertical 16px que viaja hacia arriba */
 class Bullet {
-    field int xWord;
+    field int x; // posición X en píxeles
     field int y;
     field boolean alive;
 
-    constructor Bullet new(int xw, int yStart) {
-        let xWord = xw;
+    constructor Bullet new(int xStart, int yStart) {
+        let x = xStart;
         let y = yStart;
         let alive = true;
-        do this.draw();
+        do draw();
         return this;
     }
 
     method void draw() {
-        if (~alive) { return; }
-        var int base;
-        let base = 16384 + (y * 32) + xWord;
-        do Memory.poke(base, -1); // dibuja una fila sólida en esa palabra
+        if (~(alive)) { return; }
+        if (x < 0) { return; }
+        if (y < 0) { return; }
+        if (x > 510) { return; }
+        if (y > 255) { return; }
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x + 7, y, x + 8, y + 3);
         return;
     }
 
     method void clear() {
-        if (~alive) { return; }
-        var int base;
-        let base = 16384 + (y * 32) + xWord;
-        do Memory.poke(base, 0);
+        if (~(alive)) { return; }
+        if (x < 0) { return; }
+        if (y < 0) { return; }
+        if (x > 510) { return; }
+        if (y > 255) { return; }
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x + 7, y, x + 8, y + 3);
+        do Screen.setColor(true);
         return;
     }
 
     method void step() {
-        if (~alive) { return; }
-        do this.clear();
+        if (~(alive)) { return; }
+        do clear();
         let y = y - 1;
         if (y < 0) {
             let alive = false;
             return;
         }
-        do this.draw();
+        do draw();
         return;
     }
 
     method void kill() {
-        do this.clear();
+        do clear();
         let alive = false;
         return;
     }
 
-    method int leftWord() { return xWord; }
+    method int leftX() { return x; }
     method int topY() { return y; }
     method boolean isAlive() { return alive; }
 }

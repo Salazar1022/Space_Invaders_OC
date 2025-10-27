@@ -13,26 +13,35 @@ class Game {
         let a1 = Sprites.makeAlienA();
         let a2 = Sprites.makeAlienB();
 
-        // rows, cols, startXWord, startY, gapWords, gapYpx, sprite1, sprite2
-        let f = Fleet.new(3, 8, 2, 24, 1, 8, a1, a2);
+        // rows, cols, startX(píxeles), startY, gapX, gapY (todo en píxeles)
+        let f = Fleet.new(3, 8, 40, 40, 16, 20, a1, a2);
 
         // jugador: posicion central abajo
-        let p = Player.new(16, 224);
+        let p = Player.new(250, 230);
         do p.draw();
+        
+        // Dibujar cuadrados de prueba que SABEMOS que funcionan
+        do Screen.setColor(true);
+        do Screen.drawRectangle(40, 40, 55, 55);
+        do Screen.drawRectangle(72, 40, 87, 55);
+        do Screen.drawRectangle(40, 76, 55, 91);
+        
+        // Forzar redibujo de todos los aliens DESPUÉS de los cuadrados de prueba
+        do f.redraw();
 
         let b = 0; // null referencia inicial
         let hasB = 0;
         let tick = 0;
 
         while (true) {
-            // leer teclado (mapa de memoria del keyboard en Hack: 24576)
-            let key = Memory.peek(24576);
-            // controles: 'a' = 97 izquierda, 'd' = 100 derecha, space = 32 dispara
-            if (key = 97) { do p.moveX(-1); }
-            if (key = 100) { do p.moveX(1); }
+            // leer teclado usando la clase Keyboard del OS
+            let key = Keyboard.keyPressed();
+            // controles: 'a' = 65 izquierda, 'd' = 68 derecha, space = 32 dispara
+            if (key = 65) { do p.moveX(-4); }
+            if (key = 68) { do p.moveX(4); }
             if (key = 32) {
                 if (hasB = 0) {
-                    let b = Bullet.new(p.leftWord(), p.topY() - 1);
+                    let b = Bullet.new(p.leftX(), p.topY() - 1);
                     let hasB = 1;
                 }
             }
@@ -41,7 +50,7 @@ class Game {
             if (hasB = 1) {
                 do b.step();
                 // comprobar colisión contra la flota
-                if (f.hitByBullet(b.leftWord(), b.topY())) {
+                if (f.hitByBullet(b.leftX(), b.topY())) {
                     do b.kill();
                     let hasB = 0;
                     do f.speedUp();
@@ -56,14 +65,14 @@ class Game {
 
             // temporizador simple: cada N ticks la flota da un paso
             let tick = tick + 1;
-            if (tick >= 8) {
+            if (tick > 100) {
                 do f.step();
                 let tick = 0;
             }
 
             // pequeña espera ocupada para dar tiempo entre iteraciones
             let t = 0;
-            while (t < 6000) {
+            while (t < 200) {
                 let t = t + 1;
             }
         }

@@ -1,12 +1,12 @@
-/** Nave del jugador (ancha 1 word, p.ej. 16px) */
+/** Nave del jugador (16px ancho) */
 class Player {
-    field int xWord; // columna en words
+    field int x; // posición X en píxeles
     field int y;     // fila en px
     field Array sprite; // 8 filas
 
-    constructor Player new(int xw, int yStart) {
+    constructor Player new(int xStart, int yStart) {
         var Array s; var int i;
-        let xWord = xw;
+        let x = xStart;
         let y = yStart;
         let s = Array.new(8);
         // sprite simple: bloque horizontal de 3 filas
@@ -23,44 +23,42 @@ class Player {
     }
 
     method void draw() {
-        if (~true) { /* no-op placeholder para estilo consistente */ }
-        var int base; var int i;
-        let base = 16384 + (y * 32) + xWord;
-        let i = 0;
-        while (i < 8) {
-            do Memory.poke(base + i * 32, sprite[i]);
-            let i = i + 1;
-        }
+        if (x < 0) { return; }
+        if (y < 0) { return; }
+        if (x > 495) { return; }
+        if (y > 247) { return; }
+        do Screen.setColor(true);
+        do Screen.drawRectangle(x, y, x + 15, y + 7);
         return;
     }
 
     method void clear() {
-        var int base; var int i;
-        let base = 16384 + (y * 32) + xWord;
-        let i = 0;
-        while (i < 8) {
-            do Memory.poke(base + i * 32, 0);
-            let i = i + 1;
-        }
+        if (x < 0) { return; }
+        if (y < 0) { return; }
+        if (x > 495) { return; }
+        if (y > 247) { return; }
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + 15, y + 7);
+        do Screen.setColor(true);
         return;
     }
 
     method void moveX(int dx) {
-        do this.clear();
-        let xWord = xWord + dx;
-        if (xWord < 0) { let xWord = 0; }
-        if (xWord > 31) { let xWord = 31; }
-        do this.draw();
+        do clear();
+        let x = x + dx;
+        if (x < 0) { let x = 0; }
+        if (x > 495) { let x = 495; }
+        do draw();
         return;
     }
 
-    method int leftWord() { return xWord; }
+    method int leftX() { return x; }
     method int topY() { return y; }
 
     /** Dispara una bala desde justo encima de la nave */
     method Bullet shoot() {
         var Bullet bl;
-        let bl = Bullet.new(xWord, y - 1);
+        let bl = Bullet.new(x, y - 1);
         return bl;
     }
 }
