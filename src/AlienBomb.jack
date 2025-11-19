@@ -1,10 +1,10 @@
-/** Bala vertical - MOVIMIENTO FLUIDO Y RÁPIDO */
-class Bullet {
+/** Bomba de aliens - cae verticalmente */
+class AlienBomb {
     field int x;
     field int y;
     field boolean alive;
     
-    constructor Bullet new(int xStart, int yStart) {
+    constructor AlienBomb new(int xStart, int yStart) {
         let x = xStart;
         let y = yStart;
         let alive = true;
@@ -59,19 +59,19 @@ class Bullet {
         return;
     }
     
-    /** ✅ FLUIDO: Ajustado para 100 FPS */
+    /** La bomba cae hacia abajo (contrario a Bullet) */
     method void step() {
         if (~alive) { return; }
         
         do clear();
-        let y = y - 12;  // ✅ Velocidad ajustada para 100 FPS
+        let y = y + 12;  // Cae hacia abajo - velocidad ajustada para 100 FPS
         
         // Verificar límites antes de dibujar
-        if (y < -5) {
+        if (y > 260) {
             let alive = false;
             return;
         }
-        if ((y + 3) > 260) {
+        if (y < -5) {
             let alive = false;
             return;
         }

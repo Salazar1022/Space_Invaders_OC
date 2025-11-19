@@ -1,11 +1,13 @@
 function Player.new 1
-push constant 3
+push constant 4
 call Memory.alloc 1
 pop pointer 0
 push argument 0
 pop this 0
 push argument 1
 pop this 1
+push constant 0
+pop this 3
 push constant 16
 call Array.new 1
 pop local 0
@@ -188,6 +190,33 @@ label IF_TRUE3
 push constant 0
 return
 label IF_FALSE3
+push this 0
+push local 6
+gt
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 0
+return
+label IF_FALSE4
+push this 1
+push local 7
+gt
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push constant 0
+return
+label IF_FALSE5
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push this 1
+push local 6
+push local 7
+call Screen.drawRectangle 4
+pop temp 0
 push constant 0
 not
 call Screen.setColor 1
@@ -221,9 +250,9 @@ pop local 3
 push local 3
 push constant 1
 eq
-if-goto IF_TRUE4
-goto IF_FALSE4
-label IF_TRUE4
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
 push this 0
 push constant 15
 push local 2
@@ -240,29 +269,15 @@ add
 pop local 5
 push local 4
 push local 5
-call Screen.drawPixel 2
-pop temp 0
-push local 4
-push constant 1
-add
-push local 5
-call Screen.drawPixel 2
-pop temp 0
-push local 4
-push local 5
-push constant 1
-add
-call Screen.drawPixel 2
-pop temp 0
 push local 4
 push constant 1
 add
 push local 5
 push constant 1
 add
-call Screen.drawPixel 2
+call Screen.drawRectangle 4
 pop temp 0
-label IF_FALSE4
+label IF_FALSE6
 push local 1
 push constant 2
 call Math.divide 2
@@ -281,10 +296,22 @@ goto WHILE_EXP0
 label WHILE_END0
 push constant 0
 return
-function Player.clear 0
+function Player.clear 4
 push argument 0
 pop pointer 0
 push this 0
+pop local 0
+push this 1
+pop local 1
+push this 0
+push constant 31
+add
+pop local 2
+push this 1
+push constant 31
+add
+pop local 3
+push local 0
 push constant 0
 lt
 if-goto IF_TRUE0
@@ -293,7 +320,7 @@ label IF_TRUE0
 push constant 0
 return
 label IF_FALSE0
-push this 1
+push local 1
 push constant 0
 lt
 if-goto IF_TRUE1
@@ -302,9 +329,7 @@ label IF_TRUE1
 push constant 0
 return
 label IF_FALSE1
-push this 0
-push constant 31
-add
+push local 2
 push constant 511
 gt
 if-goto IF_TRUE2
@@ -313,9 +338,7 @@ label IF_TRUE2
 push constant 0
 return
 label IF_FALSE2
-push this 1
-push constant 31
-add
+push local 3
 push constant 255
 gt
 if-goto IF_TRUE3
@@ -324,17 +347,31 @@ label IF_TRUE3
 push constant 0
 return
 label IF_FALSE3
+push local 0
+push local 2
+gt
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 0
+return
+label IF_FALSE4
+push local 1
+push local 3
+gt
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push constant 0
+return
+label IF_FALSE5
 push constant 0
 call Screen.setColor 1
 pop temp 0
-push this 0
-push this 1
-push this 0
-push constant 31
-add
-push this 1
-push constant 31
-add
+push local 0
+push local 1
+push local 2
+push local 3
 call Screen.drawRectangle 4
 pop temp 0
 push constant 0
@@ -372,24 +409,278 @@ call Player.draw 1
 pop temp 0
 push constant 0
 return
+function Player.moveLeft 0
+push argument 0
+pop pointer 0
+push pointer 0
+push constant 10
+neg
+call Player.moveX 2
+pop temp 0
+push constant 0
+return
+function Player.moveRight 0
+push argument 0
+pop pointer 0
+push pointer 0
+push constant 10
+call Player.moveX 2
+pop temp 0
+push constant 0
+return
+function Player.update 0
+push argument 0
+pop pointer 0
+push this 3
+push constant 0
+eq
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 3
+call Bullet.step 1
+pop temp 0
+push this 3
+call Bullet.isAlive 1
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push this 3
+call Bullet.dispose 1
+pop temp 0
+push constant 0
+pop this 3
+label IF_FALSE1
+label IF_FALSE0
+push constant 0
+return
+function Player.shoot 0
+push argument 0
+pop pointer 0
+push this 3
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 0
+push constant 8
+add
+push this 1
+push constant 4
+sub
+call Bullet.new 2
+pop this 3
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push this 0
+push constant 14
+add
+push this 1
+push constant 2
+sub
+push this 0
+push constant 16
+add
+push this 1
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push this 0
+push constant 14
+add
+push this 1
+push constant 2
+sub
+push this 0
+push constant 16
+add
+push this 1
+call Screen.drawRectangle 4
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function Player.hasActiveBullet 0
+push argument 0
+pop pointer 0
+push this 3
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push this 3
+call Bullet.isAlive 1
+return
+function Player.bulletX 0
+push argument 0
+pop pointer 0
+push this 3
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push this 3
+call Bullet.leftX 1
+return
+function Player.bulletY 0
+push argument 0
+pop pointer 0
+push this 3
+push constant 0
+eq
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push this 3
+call Bullet.topY 1
+return
+function Player.destroyBullet 0
+push argument 0
+pop pointer 0
+push this 3
+push constant 0
+eq
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 3
+call Bullet.kill 1
+pop temp 0
+push this 3
+call Bullet.dispose 1
+pop temp 0
+push constant 0
+pop this 3
+label IF_FALSE0
+push constant 0
+return
 function Player.leftX 0
 push argument 0
 pop pointer 0
 push this 0
+return
+function Player.rightX 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 31
+add
 return
 function Player.topY 0
 push argument 0
 pop pointer 0
 push this 1
 return
-function Player.shoot 1
+function Player.bottomY 0
 push argument 0
 pop pointer 0
-push this 0
 push this 1
-push constant 1
-sub
-call Bullet.new 2
+push constant 31
+add
+return
+function Player.hitByBomb 4
+push argument 0
+pop pointer 0
+push argument 1
+call AlienBomb.isAlive 1
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push constant 0
+return
+label IF_FALSE0
+push argument 1
+call AlienBomb.leftX 1
 pop local 0
+push argument 1
+call AlienBomb.rightX 1
+pop local 1
+push argument 1
+call AlienBomb.topY 1
+pop local 2
+push argument 1
+call AlienBomb.bottomY 1
+pop local 3
+push local 1
+push this 0
+lt
+not
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
 push local 0
+push this 0
+push constant 31
+add
+gt
+not
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push local 3
+push this 1
+lt
+not
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push local 2
+push this 1
+push constant 31
+add
+gt
+not
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push constant 0
+not
+return
+label IF_FALSE4
+label IF_FALSE3
+label IF_FALSE2
+label IF_FALSE1
+push constant 0
+return
+function Player.dispose 0
+push argument 0
+pop pointer 0
+push this 3
+push constant 0
+eq
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push this 3
+call Bullet.dispose 1
+pop temp 0
+label IF_FALSE0
+push this 2
+call Array.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
 return

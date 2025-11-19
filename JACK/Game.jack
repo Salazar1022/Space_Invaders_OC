@@ -48,14 +48,14 @@ class Game {
         
         do Output.moveCursor(8, 25);  // Centrado: (64-18)/2 = 23
         do Output.printString("*** GAME OVER ***");
-        do Output.moveCursor(11, 23);  // Centrado
+        do Output.moveCursor(11, 23);  // Centrado para texto más largo
         do Output.printString("Nivel alcanzado: ");
         do Output.printInt(level);
         do Output.moveCursor(13, 25);  // Centrado
         do Output.printString("Puntuacion: ");
         do Output.printInt(score);
         
-        do Output.moveCursor(16, 25);  // Centrado: (64-20)/2 = 22
+        do Output.moveCursor(18, 22);  // Centrado: (64-20)/2 = 22
         do Output.printString("Gracias por jugar!");
         
         do Sys.wait(3000);
@@ -115,20 +115,20 @@ class Game {
         
         // Obtener sprites de los aliens
         let sprite1 = Sprites.makeAlienA();
-        let sprite2 = Sprites.makeAlienD();
-        let sprite3 = Sprites.makeAlienB();
+        let sprite2 = Sprites.makeAlienC();
+        let sprite3 = Sprites.makeAlienD();
         
-        // Dibujar alien tipo 1 y sus puntos (30 puntos)
-        do drawMiniAlien(200, 70, sprite1);
-        do Output.moveCursor(8, 34);
+        // Dibujar alien tipo 1 y sus puntos - aliens más centrados
+        do drawMiniAlien(200, 70, sprite1);  // Más a la derecha
+        do Output.moveCursor(9, 34);  // Ajustado para estar al lado del alien
         do Output.printString("= 30 puntos");
         
-        // Dibujar alien tipo 2 (del medio) y sus puntos (20 puntos - fila del medio)
+        // Dibujar alien tipo 2 y sus puntos
         do drawMiniAlien(200, 110, sprite2);
-        do Output.moveCursor(11, 34);
+        do Output.moveCursor(12, 34);
         do Output.printString("= 20 puntos");
         
-        // Dibujar alien tipo 3 (abajo) y sus puntos (10 puntos - fila de abajo)
+        // Dibujar alien tipo 3 y sus puntos
         do drawMiniAlien(200, 150, sprite3);
         do Output.moveCursor(15, 34);
         do Output.printString("= 10 puntos");

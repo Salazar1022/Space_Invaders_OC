@@ -1,52 +1,59 @@
 /** Maneja una grilla de aliens 16x16 que se mueven en bloque */
 class Fleet {
-    field Array aliens; // arreglo de Alien16
+    field Array aliens;
     field int count;
-    field int dir;      // +1 = derecha (xWord++), -1 = izquierda (xWord--)
-    field int stepY;    // cuanto baja al tocar borde (16 px)
-    field int delayMs;  // temporizador entre pasos
-
-    /** Crea una flota R x C empezando en (startX píxeles, startY), con gapX y gapY píxeles */
+    field int dir;
+    field int stepY;
+    field int delayMs;
+    field int aliveCount;
+    field int shootCounter;
+    field Array bombs;
+    field int maxBombs;
+    field int bombCooldown;
+    field int tickCount;
+    
     constructor Fleet new(
         int rows, int cols,
         int startX, int startY,
         int gapX, int gapY,
         Array sprite1, Array sprite2
     ) {
-        var int r; var int c; var int idx; var Alien16 a;
-        var int posX; var int posY;
-        var Array sprite3; var Array sprite4;
-        var Array currentSprite;
+        var int r, c, idx;
+        var Alien16 a;
+        var int posX, posY;
+        var Array sprite3, sprite4, currentSprite;
         
-        let aliens = Array.new(24);  // Hardcode 24
-        let count = 24;
+        let aliens = Array.new(30);
+        let count = 30;
+        let aliveCount = 30;
         let dir = 1;
         let stepY = 16;
         let delayMs = 120;
+        let shootCounter = 0;
+        let bombs = Array.new(10);
+        let maxBombs = 10;
+        let bombCooldown = 0;
+        let tickCount = 0;
         
-        // Obtener los otros 2 sprites
-        let sprite3 = Sprites.makeAlienC();
-        let sprite4 = Sprites.makeAlienD();
-
+        let sprite3 = Sprites.makeAlienD();
+        let sprite4 = Sprites.makeAlienB();
+        
         let idx = 0;
         let r = 0;
-        while (r < 3) {  // 3 filas
-            // Seleccionar sprite según la fila
-            if (r = 0) { let currentSprite = sprite1; }  // Fila 0: Alien A (pequeño)
-            if (r = 1) { let currentSprite = sprite3; }  // Fila 1: Alien C (mediano)
-            if (r = 2) { let currentSprite = sprite4; }  // Fila 2: Alien D (grande)
+        while (r < 3) {
+            if (r = 0) { let currentSprite = sprite1; }
+            if (r = 1) { let currentSprite = sprite3; }
+            if (r = 2) { let currentSprite = sprite4; }
             
             let c = 0;
-            while (c < 8) {  // 8 columnas
-                // Calcular posición - ahora con aliens de 32x32
-                let posX = startX + (c * 40);  // 32px alien + 8px gap
-                let posY = startY + (r * 40);  // 32px alien + 8px gap
-                
-                // Crear alien con el sprite de su fila
-                let a = Alien16.new(posX, posY, currentSprite);
+            while (c < 10) {
+                let posX = startX + (c * 40);
+                let posY = startY + (r * 40);
+                // Fila 0 (arriba) = 30 puntos, Fila 1 = 20 puntos, Fila 2 = 10 puntos
+                if (r = 0) { let a = Alien16.new(posX, posY, currentSprite, 30); }
+                if (r = 1) { let a = Alien16.new(posX, posY, currentSprite, 20); }
+                if (r = 2) { let a = Alien16.new(posX, posY, currentSprite, 10); }
                 let aliens[idx] = a;
-                do a.draw();
-                
                 let idx = idx + 1;
                 let c = c + 1;
             }
@@ -54,10 +61,10 @@ class Fleet {
         }
         return this;
     }
-
-    /** Borde derecho real: 496 píxeles (512 - 16) */
+    
     method boolean atRightEdge() {
-        var int i; var Alien16 a; var int maxX;
+        var int i, maxX;
+        var Alien16 a;
         let maxX = 0;
         let i = 0;
         while (i < count) {
@@ -67,14 +74,13 @@ class Fleet {
             }
             let i = i + 1;
         }
-        // Alien está en rightX, necesita 8 píxeles más para moverse
-        // rightX puede ser máximo 503 (511 - 8) antes de moverse
-        if (maxX > 475) { return true; }  // Ajustado para aliens de 32px
+        if (maxX > 470) { return true; }
         return false;
     }
-
+    
     method boolean atLeftEdge() {
-        var int i; var Alien16 a; var int minX;
+        var int i, minX;
+        var Alien16 a;
         let minX = 9999;
         let i = 0;
         while (i < count) {
@@ -84,18 +90,18 @@ class Fleet {
             }
             let i = i + 1;
         }
-        // leftX puede ser mínimo 8 antes de moverse (0 + 8 = 8)
-        if (minX < 8) { return true; }
+        if (minX < 10) { return true; }
         return false;
     }
-
-    /** Un paso de movimiento: todos a la derecha o izquierda; si toca borde, bajan y cambian dir */
+    
     method void step() {
-        var int i; var Alien16 a;
-
+        var int i;
+        var Alien16 a;
+        
+        let tickCount = tickCount + 1;
+        
         if (dir = 1) {
             if (atRightEdge()) {
-                // tocaron borde: bajar y cambiar dir
                 let i = 0;
                 while (i < count) {
                     let a = aliens[i];
@@ -104,17 +110,15 @@ class Fleet {
                 }
                 let dir = -1;
             } else {
-                // mover a la derecha
                 let i = 0;
                 while (i < count) {
                     let a = aliens[i];
-                    if (a.isAlive()) { do a.moveX(8); } // 8 píxeles
+                    if (a.isAlive()) { do a.moveX(8); }
                     let i = i + 1;
                 }
             }
         } else {
             if (atLeftEdge()) {
-                // tocaron borde izquierdo: bajar y cambiar dir
                 let i = 0;
                 while (i < count) {
                     let a = aliens[i];
@@ -123,58 +127,209 @@ class Fleet {
                 }
                 let dir = 1;
             } else {
-                // mover a la izquierda
                 let i = 0;
                 while (i < count) {
                     let a = aliens[i];
-                    if (a.isAlive()) { do a.moveX(-8); } // -8 píxeles
+                    if (a.isAlive()) { do a.moveX(-8); }
                     let i = i + 1;
                 }
             }
         }
-        // “Animación” sencilla alternando sprite entre pasos (opcional):
-        // intercambia sprite1 <-> sprite2 aquí si quieres.
         return;
     }
-
+    
     method void speedUp() {
         if (delayMs > 20) { let delayMs = delayMs - 10; }
         return;
     }
+    
+    method int hitByBullet(int bx, int by) {
+        var int i, bRight, bBottom;
+        var Alien16 a;
+        var int alienPoints;
 
-    /** Comprueba si una bala en (bx píxeles, by) impacta a algún alien. Si hay impacto, mata el alien y devuelve true. */
-    method boolean hitByBullet(int bx, int by) {
-        var int i; var Alien16 a;
+        let bRight = bx + 15;
+        let bBottom = by + 3;
         let i = 0;
+
         while (i < count) {
             let a = aliens[i];
             if (a.isAlive()) {
-                if (bx > (a.leftX() - 1)) {
-                    if (bx < (a.rightX() + 1)) {
-                        if (by > (a.topY() - 1)) {
-                            if (by < (a.bottomY() + 1)) {
-                                do a.kill();
-                                return true;
-                            }
+                if (isCollision(bx, bRight, by, bBottom, a)) {
+                    let alienPoints = a.getPoints();
+                    do a.kill();
+                    let aliveCount = aliveCount - 1;
+                    return alienPoints;
+                }
+            }
+            let i = i + 1;
+        }
+
+        return 0;
+    }
+
+method boolean isCollision(int bx, int bRight, int by, int bBottom, Alien16 a) {
+    var int axLeft, axRight, ayTop, ayBottom;
+    
+    let axLeft = a.leftX();
+    let axRight = a.rightX();
+    let ayTop = a.topY();
+    let ayBottom = a.bottomY();
+    
+    if (~(bx > axRight)) {
+        if (~(bRight < axLeft)) {
+            if (~(by > ayBottom)) {
+                if (~(bBottom < ayTop)) {
+                    return true;
+                }
+            }
+        }
+    }
+    
+    return false;
+}
+
+    method boolean anyAlive() { return aliveCount > 0; }
+    method int getAliveCount() { return aliveCount; }
+    
+    /** Dispara una bomba desde un alien aleatorio que esté vivo */
+    method void tryShootBomb() {
+        var int i, randomIdx, attempts;
+        var Alien16 shooter;
+        var AlienBomb newBomb;
+        var int bombX, bombY;
+        
+        // Sin cooldown - siempre puede disparar si hay slots
+        
+        // Buscar un slot vacío en el array de bombas
+        let i = 0;
+        while (i < maxBombs) {
+            let newBomb = bombs[i];
+            if (newBomb = null) {
+                // Slot vacío encontrado, seleccionar alien aleatorio
+                let attempts = 0;
+                let randomIdx = 0;
+                
+                // Intentar encontrar un alien vivo
+                while (attempts < 10) {
+                    let randomIdx = (tickCount * 7 + attempts * 13) & 31;
+                    if (randomIdx < count) {
+                        let shooter = aliens[randomIdx];
+                        if (shooter.isAlive()) {
+                            // Crear bomba
+                            let bombX = shooter.leftX() + 8;
+                            let bombY = shooter.bottomY() + 5;
+                            let newBomb = AlienBomb.new(bombX, bombY);
+                            let bombs[i] = newBomb;
+                            return;
                         }
                     }
+                    let attempts = attempts + 1;
+                }
+                return;
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    /** Actualiza todas las bombas activas */
+    method void updateBombs() {
+        var int i;
+        var AlienBomb bomb;
+        
+        let i = 0;
+        while (i < maxBombs) {
+            let bomb = bombs[i];
+            if (~(bomb = null)) {
+                if (bomb.isAlive()) {
+                    do bomb.step();
+                } else {
+                    do bomb.dispose();
+                    let bombs[i] = null;
+                }
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+    
+    /** Verifica si alguna bomba golpeó al jugador */
+    method boolean checkBombHitPlayer(Player player) {
+        var int i;
+        var AlienBomb bomb;
+        
+        let i = 0;
+        while (i < maxBombs) {
+            let bomb = bombs[i];
+            if (~(bomb = null)) {
+                if (player.hitByBomb(bomb)) {
+                    do bomb.kill();
+                    return true;
                 }
             }
             let i = i + 1;
         }
         return false;
     }
-
-    /** Redibuja todos los aliens vivos */
-    method void redraw() {
-        var int i; var Alien16 a;
+    
+    /** Destruye todas las bombas (para reinicio de nivel) */
+    method void clearAllBombs() {
+        var int i;
+        var AlienBomb bomb;
+        
         let i = 0;
-        // Hardcode: 3 filas × 8 columnas = 24 aliens
-        while (i < 24) {
+        while (i < maxBombs) {
+            let bomb = bombs[i];
+            if (~(bomb = null)) {
+                do bomb.dispose();
+                let bombs[i] = null;
+            }
+            let i = i + 1;
+        }
+        let bombCooldown = 0;
+        return;
+    }
+
+    method boolean reachedBottom() {
+        var int i;
+        var Alien16 a;
+        let i = 0;
+        while (i < count) {
+            let a = aliens[i];
+            if (a.isAlive()) {
+                if (a.bottomY() > 200) { return true; }
+            }
+            let i = i + 1;
+        }
+        return false;
+    }
+    
+    method void draw() {
+        var int i;
+        var Alien16 a;
+        let i = 0;
+        while (i < 30) {
             let a = aliens[i];
             do a.draw();
             let i = i + 1;
         }
+        return;
+    }
+    
+    method void dispose() {
+        var int i;
+        var Alien16 a;
+        do clearAllBombs();
+        let i = 0;
+        while (i < count) {
+            let a = aliens[i];
+            do a.dispose();
+            let i = i + 1;
+        }
+        do aliens.dispose();
+        do bombs.dispose();
+        do Memory.deAlloc(this);
         return;
     }
 }

@@ -1,4 +1,4 @@
-function Bullet.new 0
+function AlienBomb.new 0
 push constant 3
 call Memory.alloc 1
 pop pointer 0
@@ -10,11 +10,11 @@ push constant 0
 not
 pop this 2
 push pointer 0
-call Bullet.draw 1
+call AlienBomb.draw 1
 pop temp 0
 push pointer 0
 return
-function Bullet.draw 4
+function AlienBomb.draw 4
 push argument 0
 pop pointer 0
 push this 2
@@ -117,7 +117,7 @@ call Screen.drawRectangle 4
 pop temp 0
 push constant 0
 return
-function Bullet.clear 4
+function AlienBomb.clear 4
 push argument 0
 pop pointer 0
 push this 2
@@ -211,7 +211,7 @@ call Screen.setColor 1
 pop temp 0
 push constant 0
 return
-function Bullet.step 0
+function AlienBomb.step 0
 push argument 0
 pop pointer 0
 push this 2
@@ -223,29 +223,27 @@ push constant 0
 return
 label IF_FALSE0
 push pointer 0
-call Bullet.clear 1
+call AlienBomb.clear 1
 pop temp 0
 push this 1
 push constant 12
-sub
+add
 pop this 1
+push this 1
+push constant 260
+gt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push constant 0
+pop this 2
+push constant 0
+return
+label IF_FALSE1
 push this 1
 push constant 5
 neg
 lt
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
-push constant 0
-pop this 2
-push constant 0
-return
-label IF_FALSE1
-push this 1
-push constant 3
-add
-push constant 260
-gt
 if-goto IF_TRUE2
 goto IF_FALSE2
 label IF_TRUE2
@@ -255,50 +253,50 @@ push constant 0
 return
 label IF_FALSE2
 push pointer 0
-call Bullet.draw 1
+call AlienBomb.draw 1
 pop temp 0
 push constant 0
 return
-function Bullet.kill 0
+function AlienBomb.kill 0
 push argument 0
 pop pointer 0
 push pointer 0
-call Bullet.clear 1
+call AlienBomb.clear 1
 pop temp 0
 push constant 0
 pop this 2
 push constant 0
 return
-function Bullet.leftX 0
+function AlienBomb.leftX 0
 push argument 0
 pop pointer 0
 push this 0
 return
-function Bullet.rightX 0
+function AlienBomb.rightX 0
 push argument 0
 pop pointer 0
 push this 0
 push constant 15
 add
 return
-function Bullet.topY 0
+function AlienBomb.topY 0
 push argument 0
 pop pointer 0
 push this 1
 return
-function Bullet.bottomY 0
+function AlienBomb.bottomY 0
 push argument 0
 pop pointer 0
 push this 1
 push constant 3
 add
 return
-function Bullet.isAlive 0
+function AlienBomb.isAlive 0
 push argument 0
 pop pointer 0
 push this 2
 return
-function Bullet.dispose 0
+function AlienBomb.dispose 0
 push argument 0
 pop pointer 0
 push pointer 0
