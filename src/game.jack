@@ -9,13 +9,17 @@ class Game {
     field int lives;
     field int level;
     field int baseDelay;
+    field Array sprite1;
+    field Array sprite2;
     
     constructor Game new() {
         let player = Player.new(240, 220);
+        let sprite1 = Sprites.makeAlienA();
+        let sprite2 = Sprites.makeAlienB();
         let fleet = Fleet.new(
             3, 10, 30, 30, 40, 40,
-            Sprites.makeAlienA(),
-            Sprites.makeAlienB()
+            sprite1,
+            sprite2
         );
         
         let running = true;
@@ -120,17 +124,17 @@ class Game {
         
         // Dibujar alien tipo 1 y sus puntos (30 puntos)
         do drawMiniAlien(200, 70, sprite1);
-        do Output.moveCursor(8, 34);
+        do Output.moveCursor(8, 30);
         do Output.printString("= 30 puntos");
         
         // Dibujar alien tipo 2 (del medio) y sus puntos (20 puntos - fila del medio)
         do drawMiniAlien(200, 110, sprite2);
-        do Output.moveCursor(11, 34);
+        do Output.moveCursor(11, 30);
         do Output.printString("= 20 puntos");
         
         // Dibujar alien tipo 3 (abajo) y sus puntos (10 puntos - fila de abajo)
         do drawMiniAlien(200, 150, sprite3);
-        do Output.moveCursor(15, 34);
+        do Output.moveCursor(15, 30);
         do Output.printString("= 10 puntos");
         
         // Información extra centrada: (64-17)/2 = 23
@@ -148,6 +152,11 @@ class Game {
         while (Keyboard.keyPressed() = 32) {
             do Sys.wait(50);
         }
+        
+        // LIBERAR SPRITES para evitar heap overflow
+        do sprite1.dispose();
+        do sprite2.dispose();
+        do sprite3.dispose();
         
         return;
     }
@@ -365,6 +374,8 @@ class Game {
     method void dispose() {
         do player.dispose();
         do fleet.dispose();
+        do sprite1.dispose();
+        do sprite2.dispose();
         do Memory.deAlloc(this);
         return;
     }

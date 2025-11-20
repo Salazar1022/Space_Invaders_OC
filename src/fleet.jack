@@ -324,7 +324,9 @@ method boolean isCollision(int bx, int bRight, int by, int bBottom, Alien16 a) {
         let i = 0;
         while (i < count) {
             let a = aliens[i];
-            do a.dispose();
+            if (~(a = null)) {
+                do a.dispose();
+            }
             let i = i + 1;
         }
         do aliens.dispose();

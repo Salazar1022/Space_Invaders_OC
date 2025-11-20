@@ -18,7 +18,7 @@ Esta guía te llevará paso a paso desde la descarga de las herramientas hasta e
 
 ## Paso 2: Compilar tu proyecto Space Invaders
 
-Abre PowerShell en la carpeta de tu proyecto (`C:\Codigos\Space_Invaders_OC`) y ejecuta:
+Abre PowerShell en la carpeta raíz de tu proyecto y ejecuta:
 
 ### Opción A: Usar el script automático (recomendado)
 
@@ -48,6 +48,7 @@ Esto creará archivos `.vm` dentro de la carpeta `src/`:
 - `src\Game.vm`
 - `src\Fleet.vm`
 - `src\Alien16.vm`
+- `src\AlienBomb.vm`
 - `src\Sprites.vm`
 - `src\Player.vm`
 - `src\Bullet.vm`
@@ -77,13 +78,13 @@ Esto creará `src\Main.hack` (el archivo ejecutable final).
 
 2. En el Hardware Simulator:
    - Ve a `File` → `Load Program`
-   - Navega a `C:\Codigos\Space_Invaders_OC\src\` y selecciona el archivo `.hack` generado
+   - Navega a la carpeta `src\` del proyecto y selecciona el archivo `.hack` generado
    - Haz clic en el botón de "Run" (►) o presiona F5
    - Selecciona "No Animation" o ajusta la velocidad para mejor rendimiento
 
 3. **Controles del juego**:
-   - Presiona la tecla **'a'** para mover la nave a la izquierda
-   - Presiona la tecla **'d'** para mover la nave a la derecha
+   - Presiona la **flecha izquierda** para mover la nave a la izquierda
+   - Presiona la **flecha derecha** para mover la nave a la derecha
    - Presiona la **barra espaciadora** para disparar
 
 ## Solución de problemas comunes
@@ -109,14 +110,9 @@ Esto creará `src\Main.hack` (el archivo ejecutable final).
 - Ajusta la velocidad con el slider de velocidad al máximo
 
 ### El juego va muy rápido
-- Edita `src\game.jack` y aumenta el valor en el busy-wait:
-  ```jack
-  let t = 0;
-  while (t < 12000) {  // aumenta este número
-      let t = t + 1;
-  }
-  ```
-- Vuelve a compilar desde el Paso 2.1
+- El juego usa `Sys.wait(10)` para mantener ~100 FPS. La velocidad aumenta con cada nivel.
+- Puedes ajustar el parámetro `baseDelay` en `Game.jack` (línea ~27) si quieres cambiar la velocidad inicial.
+- Vuelve a compilar desde el Paso 2.1 después de hacer cambios.
 
 ## Alternativa: CPU Emulator
 
@@ -137,7 +133,7 @@ Para futuras compilaciones (una vez que tengas todo configurado):
 
 ```powershell
 # Desde la raíz del proyecto
-cd C:\Codigos\Space_Invaders_OC
+cd ruta\a\tu\Space_Invaders_OC
 
 # Compilar todo de una vez (reemplaza la ruta si es necesaria)
 .\scripts\build_and_run.ps1 'C:\nand2tetris\tools'

@@ -903,8 +903,16 @@ pop pointer 1
 push that 0
 pop local 1
 push local 1
+push constant 0
+eq
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 1
 call Alien16.dispose 1
 pop temp 0
+label IF_FALSE0
 push local 0
 push constant 1
 add

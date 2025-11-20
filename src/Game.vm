@@ -1,19 +1,23 @@
 function Game.new 0
-push constant 9
+push constant 11
 call Memory.alloc 1
 pop pointer 0
 push constant 240
 push constant 220
 call Player.new 2
 pop this 0
+call Sprites.makeAlienA 0
+pop this 9
+call Sprites.makeAlienB 0
+pop this 10
 push constant 3
 push constant 10
 push constant 30
 push constant 30
 push constant 40
 push constant 40
-call Sprites.makeAlienA 0
-call Sprites.makeAlienB 0
+push this 9
+push this 10
 call Fleet.new 8
 pop this 1
 push constant 0
@@ -680,7 +684,7 @@ push local 0
 call Game.drawMiniAlien 4
 pop temp 0
 push constant 8
-push constant 34
+push constant 30
 call Output.moveCursor 2
 pop temp 0
 push constant 11
@@ -716,7 +720,7 @@ push local 1
 call Game.drawMiniAlien 4
 pop temp 0
 push constant 11
-push constant 34
+push constant 30
 call Output.moveCursor 2
 pop temp 0
 push constant 11
@@ -752,7 +756,7 @@ push local 2
 call Game.drawMiniAlien 4
 pop temp 0
 push constant 15
-push constant 34
+push constant 30
 call Output.moveCursor 2
 pop temp 0
 push constant 11
@@ -908,6 +912,15 @@ call Sys.wait 1
 pop temp 0
 goto WHILE_EXP1
 label WHILE_END1
+push local 0
+call Array.dispose 1
+pop temp 0
+push local 1
+call Array.dispose 1
+pop temp 0
+push local 2
+call Array.dispose 1
+pop temp 0
 push constant 0
 return
 function Game.drawMiniAlien 6
@@ -1773,6 +1786,12 @@ call Player.dispose 1
 pop temp 0
 push this 1
 call Fleet.dispose 1
+pop temp 0
+push this 9
+call Array.dispose 1
+pop temp 0
+push this 10
+call Array.dispose 1
 pop temp 0
 push pointer 0
 call Memory.deAlloc 1
