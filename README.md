@@ -35,6 +35,11 @@ Space Invaders es uno de los videojuegos arcade más icónicos de la historia. E
 
 ---
 
+## 📽️ Link del Video
+https://www.youtube.com/watch?v=LhpiCUi-JwE
+
+---
+
 ## 🚀 Requisitos Previos
 
 Antes de comenzar, asegúrate de tener instalado:
